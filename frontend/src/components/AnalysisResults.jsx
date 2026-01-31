@@ -33,6 +33,16 @@ function formatClassName(name) {
   ).join(' ');
 }
 
+// Format confidence percentage - cap at 99.9% for medical appropriateness
+function formatConfidence(prob) {
+  const percentage = prob * 100;
+  // Cap at 99.9% - no medical AI should claim 100% certainty
+  if (percentage >= 99.95) {
+    return '99.9';
+  }
+  return percentage.toFixed(1);
+}
+
 export default function AnalysisResults({ result, originalImage }) {
   const [heatmapOpacity, setHeatmapOpacity] = useState(50);
   const [showGradcamInfo, setShowGradcamInfo] = useState(false);
@@ -139,7 +149,7 @@ export default function AnalysisResults({ result, originalImage }) {
                 'text-xl font-bold',
                 isPredictionCorrect ? 'text-success-700' : 'text-warning-700'
               )}>
-                {(confidence * 100).toFixed(1)}%
+                {formatConfidence(confidence)}%
               </p>
             </div>
           </div>
@@ -259,7 +269,7 @@ export default function AnalysisResults({ result, originalImage }) {
 
               <div className="space-y-3">
                 {sortedProbs.map(([className, prob]) => {
-                  const percentage = (prob * 100).toFixed(1);
+                  const percentage = formatConfidence(prob);
                   const isPredicted = className.toLowerCase() === prediction.toLowerCase();
                   const displayName = formatClassName(className);
 
