@@ -15,6 +15,26 @@ export const sampleImages = {
     { id: 'pneumonia_1', label: 'Pneumonia', path: '/samples/pneumonia/pneumonia_1.jpg' },
     { id: 'pneumonia_2', label: 'Pneumonia', path: '/samples/pneumonia/pneumonia_2.jpg' },
   ],
+  retinal_oct: [
+    { id: 'cnv_1', label: 'CNV', path: '/samples/retinal_oct/cnv_1.jpg' },
+    { id: 'cnv_2', label: 'CNV', path: '/samples/retinal_oct/cnv_2.jpg' },
+    { id: 'dme_1', label: 'DME', path: '/samples/retinal_oct/dme_1.jpg' },
+    { id: 'dme_2', label: 'DME', path: '/samples/retinal_oct/dme_2.jpg' },
+    { id: 'drusen_1', label: 'Drusen', path: '/samples/retinal_oct/drusen_1.jpg' },
+    { id: 'drusen_2', label: 'Drusen', path: '/samples/retinal_oct/drusen_2.jpg' },
+    { id: 'normal_1', label: 'Normal', path: '/samples/retinal_oct/normal_1.jpg' },
+    { id: 'normal_2', label: 'Normal', path: '/samples/retinal_oct/normal_2.jpg' },
+  ],
+  bone_fracture: [
+    { id: 'fractured_1', label: 'Fractured', path: '/samples/bone_fracture/fractured_1.jpg' },
+    { id: 'fractured_2', label: 'Fractured', path: '/samples/bone_fracture/fractured_2.jpg' },
+    { id: 'fractured_3', label: 'Fractured', path: '/samples/bone_fracture/fractured_3.jpg' },
+    { id: 'fractured_4', label: 'Fractured', path: '/samples/bone_fracture/fractured_4.jpg' },
+    { id: 'normal_1', label: 'Normal', path: '/samples/bone_fracture/normal_1.jpg' },
+    { id: 'normal_2', label: 'Normal', path: '/samples/bone_fracture/normal_2.jpg' },
+    { id: 'normal_3', label: 'Normal', path: '/samples/bone_fracture/normal_3.jpg' },
+    { id: 'normal_4', label: 'Normal', path: '/samples/bone_fracture/normal_4.jpg' },
+  ],
 };
 
 export const modelInfo = {
@@ -32,5 +52,20 @@ export const modelInfo = {
     auc: '0.958',
     classes: ['Normal', 'Pneumonia'],
     imageType: 'Chest X-Ray',
+  },
+  retinal_oct: {
+    name: 'Retinal OCT Analysis',
+    description: 'Classifies retinal OCT scans into CNV, DME, Drusen, or Normal for eye disease detection.',
+    accuracy: '99%',
+    classes: ['CNV', 'DME', 'Drusen', 'Normal'],
+    imageType: 'OCT Scan',
+  },
+  bone_fracture: {
+    name: 'Bone Fracture Detection',
+    description: 'Detects bone fractures from X-ray images across all anatomical regions.',
+    accuracy: '98%',
+    auc: '0.998',
+    classes: ['Fractured', 'Not Fractured'],
+    imageType: 'X-Ray',
   },
 };

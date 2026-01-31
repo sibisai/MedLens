@@ -5,12 +5,21 @@ import clsx from 'clsx';
 // Format class names for display (e.g., "notumor" -> "No Tumor", "glioma" -> "Glioma")
 function formatClassName(name) {
   const formatMap = {
+    // Brain tumor
     'notumor': 'No Tumor',
     'glioma': 'Glioma',
     'meningioma': 'Meningioma',
     'pituitary': 'Pituitary',
+    // Pneumonia
     'normal': 'Normal',
     'pneumonia': 'Pneumonia',
+    // Retinal OCT
+    'cnv': 'CNV',
+    'dme': 'DME',
+    'drusen': 'Drusen',
+    // Bone fracture
+    'fractured': 'Fractured',
+    'not fractured': 'Not Fractured',
   };
 
   const lower = name.toLowerCase();
@@ -18,12 +27,14 @@ function formatClassName(name) {
     return formatMap[lower];
   }
 
-  // Fallback: capitalize first letter
-  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  // Fallback: capitalize first letter of each word
+  return name.split(' ').map(word =>
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
 }
 
 export default function AnalysisResults({ result, originalImage }) {
-  const [heatmapOpacity, setHeatmapOpacity] = useState(40);
+  const [heatmapOpacity, setHeatmapOpacity] = useState(50);
   const [showGradcamInfo, setShowGradcamInfo] = useState(false);
   const canvasRef = useRef(null);
   const [originalImg, setOriginalImg] = useState(null);
@@ -94,7 +105,7 @@ export default function AnalysisResults({ result, originalImage }) {
       <div className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg">
         <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
         <p className="text-sm text-amber-800">
-          <span className="font-medium">Deep Learning Demo:</span> This tool is not a substitute for professional medical diagnosis.
+          <span className="font-medium">Educational Demo:</span> This tool is not a substitute for professional medical diagnosis.
         </p>
       </div>
 
