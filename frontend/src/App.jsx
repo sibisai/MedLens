@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ModelSelector from './components/ModelSelector';
@@ -16,7 +16,9 @@ export default function App() {
   const [selectedSample, setSelectedSample] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  
+
+  const modelSelectorRef = useRef(null);
+
   const { analyze, reset, isAnalyzing, result, error } = useImageAnalysis();
 
   // Reset selection when model changes
@@ -26,6 +28,13 @@ export default function App() {
     setPreviewUrl(null);
     reset();
   }, [selectedModel, reset]);
+
+  // Handle model selection from Hero icons
+  const handleHeroModelSelect = useCallback((modelId) => {
+    setSelectedModel(modelId);
+    // Scroll to model selector section
+    modelSelectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   // Handle sample image selection
   const handleSampleSelect = useCallback((sample) => {
@@ -40,11 +49,11 @@ export default function App() {
     setUploadedFile(file);
     setSelectedSample(null);
     reset();
-    
+
     // Create preview URL
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
-    
+
     // Cleanup old URL
     return () => URL.revokeObjectURL(url);
   }, [reset]);
@@ -85,12 +94,12 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <Hero />
-      
+      <Hero onSelectModel={handleHeroModelSelect} />
+
       <main className="flex-1 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Step 1: Model Selection */}
-          <section className="mb-10">
+          <section ref={modelSelectorRef} className="mb-10 scroll-mt-6">
             <div className="flex items-center gap-3 mb-4">
               <span className="flex items-center justify-center w-7 h-7 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
                 1
@@ -111,7 +120,7 @@ export default function App() {
               </span>
               <h3 className="text-lg font-semibold text-gray-900">Select Image</h3>
             </div>
-            
+
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
               {/* Sample Images */}
               <SampleImages
