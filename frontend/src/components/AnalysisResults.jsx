@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Download, Info, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
+import { conditionDescriptions } from '../utils/sampleData';
 
 // Format class names for display (e.g., "notumor" -> "No Tumor", "glioma" -> "Glioma")
 function formatClassName(name) {
@@ -33,6 +34,12 @@ function formatClassName(name) {
   ).join(' ');
 }
 
+// Get condition description
+function getConditionDescription(prediction) {
+  const lower = prediction.toLowerCase();
+  return conditionDescriptions[lower] || null;
+}
+
 // Format confidence percentage - cap at 99.9% for medical appropriateness
 function formatConfidence(prob) {
   const percentage = prob * 100;
@@ -58,6 +65,7 @@ export default function AnalysisResults({ result, originalImage }) {
     : [];
 
   const isPredictionCorrect = confidence > 0.7;
+  const conditionDescription = prediction ? getConditionDescription(prediction) : null;
 
   // Load images for canvas blending
   useEffect(() => {
@@ -128,9 +136,9 @@ export default function AnalysisResults({ result, originalImage }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {isPredictionCorrect ? (
-                <CheckCircle className="w-6 h-6 text-success-500" />
+                <CheckCircle className="w-6 h-6 text-success-500 flex-shrink-0" />
               ) : (
-                <AlertCircle className="w-6 h-6 text-warning-500" />
+                <AlertCircle className="w-6 h-6 text-warning-500 flex-shrink-0" />
               )}
               <div>
                 <p className="text-sm text-gray-600">Prediction</p>
@@ -153,6 +161,13 @@ export default function AnalysisResults({ result, originalImage }) {
               </p>
             </div>
           </div>
+
+          {/* Condition Description */}
+          {conditionDescription && (
+            <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+              {conditionDescription}
+            </p>
+          )}
         </div>
 
         <div className="p-6">
@@ -183,12 +198,11 @@ export default function AnalysisResults({ result, originalImage }) {
                 <div className="mb-3 p-3 bg-primary-50 rounded-lg text-xs text-primary-800">
                   <strong>What is Grad-CAM?</strong> Gradient-weighted Class Activation Mapping highlights
                   the regions of the image that most influenced the model's prediction.
-                  Warmer colors (red/yellow) indicate areas of higher importance.
                 </div>
               )}
 
               {/* Side-by-side comparison */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="grid grid-cols-2 gap-3 mb-3">
                 {/* Original Image */}
                 <div>
                   <p className="text-xs font-medium text-gray-500 mb-2 text-center">Original</p>
@@ -216,9 +230,16 @@ export default function AnalysisResults({ result, originalImage }) {
                 </div>
               </div>
 
-              {/* Opacity Slider */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
+              {/* Color Legend - directly under images */}
+              <div className="flex items-center justify-center gap-2 text-xs text-gray-500 font-medium mb-4">
+                <span>Low importance</span>
+                <div className="w-24 h-1 rounded-full bg-gradient-to-r from-blue-500 via-yellow-400 to-red-500" />
+                <span>High importance</span>
+              </div>
+
+              {/* Heatmap Controls */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-medium text-gray-600">
                     Heatmap Intensity
                   </label>
@@ -232,16 +253,23 @@ export default function AnalysisResults({ result, originalImage }) {
                   max="100"
                   value={heatmapOpacity}
                   onChange={(e) => setHeatmapOpacity(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  className="slider"
                 />
-                <div className="flex justify-between text-xs text-gray-400">
-                  <span>Original</span>
-                  <span>Full Heatmap</span>
-                </div>
               </div>
 
               <style>{`
+                .slider {
+                  -webkit-appearance: none;
+                  appearance: none;
+                  width: 100%;
+                  height: 6px;
+                  background: #e5e7eb;
+                  border-radius: 3px;
+                  outline: none;
+                  cursor: pointer;
+                }
                 .slider::-webkit-slider-thumb {
+                  -webkit-appearance: none;
                   appearance: none;
                   width: 18px;
                   height: 18px;
@@ -309,13 +337,7 @@ export default function AnalysisResults({ result, originalImage }) {
                 })}
               </div>
 
-              {/* Model info */}
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500">
-                  Results generated using EfficientNet-V2-S architecture trained on medical imaging datasets.
-                  Use the slider to adjust heatmap visibility and see which regions influenced the prediction.
-                </p>
-              </div>
+
             </div>
           </div>
         </div>

@@ -69,3 +69,29 @@ export const modelInfo = {
     imageType: 'X-Ray',
   },
 };
+
+// Medical condition descriptions for results display
+// These provide user-friendly explanations of each condition
+// Keys use quotes consistently for readability
+export const conditionDescriptions = {
+  // Brain tumor conditions
+  'glioma': 'A brain tumor that starts in the brain\'s support cells and can affect how the brain functions.',
+  'meningioma': 'A slow-growing tumor that forms in the tissue covering the brain and spinal cord.',
+  'pituitary': 'A growth in the pituitary gland that can affect hormone levels in the body.',
+  'notumor': 'The scan does not show signs of a brain tumor.',
+
+  // Pneumonia conditions
+  'pneumonia': 'A lung infection where the air spaces fill with fluid or pus, making it harder to breathe.',
+
+  // Retinal OCT conditions
+  'cnv': 'Choroidal Neovascularization — Abnormal blood vessel growth under the retina that can leak and damage vision.',
+  'dme': 'Diabetic Macular Edema — Swelling in the center of the retina caused by diabetes-related fluid buildup.',
+  'drusen': 'Small yellowish deposits under the retina that are often linked to aging and macular degeneration.',
+
+  // Bone fracture conditions
+  'fractured': 'A bone that is cracked or broken.',
+  'not fractured': 'The bone appears intact with no visible breaks.',
+
+  // Shared "normal" - used by pneumonia, retinal OCT
+  'normal': 'The scan appears healthy with no signs of disease.',
+};
