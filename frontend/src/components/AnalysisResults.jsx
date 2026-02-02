@@ -191,24 +191,13 @@ export default function AnalysisResults({ result, originalImage, selectedModel }
           <div className="grid lg:grid-cols-2 gap-6">
             {/* Visualization Section */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-medium text-gray-700">Grad-CAM Visualization</h4>
-                  <button
-                    onClick={() => setShowGradcamInfo(!showGradcamInfo)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <Info className="w-4 h-4" />
-                  </button>
-                </div>
-
+              <div className="flex items-center gap-2 mb-3">
+                <h4 className="text-sm font-medium text-gray-700">Grad-CAM Visualization</h4>
                 <button
-                  onClick={handleDownload}
-                  disabled={isGeneratingPDF}
-                  className="flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 disabled:opacity-50"
+                  onClick={() => setShowGradcamInfo(!showGradcamInfo)}
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  <Download className="w-3.5 h-3.5" />
-                  {isGeneratingPDF ? 'Generating...' : 'Download Report'}
+                  <Info className="w-4 h-4" />
                 </button>
               </div>
 
@@ -355,7 +344,17 @@ export default function AnalysisResults({ result, originalImage, selectedModel }
                 })}
               </div>
 
-
+              {/* Download Report Button */}
+              <div className="mt-6 flex justify-center">
+                <button
+                  onClick={handleDownload}
+                  disabled={isGeneratingPDF}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 border border-primary-200 rounded-lg hover:bg-primary-50 disabled:opacity-50 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  {isGeneratingPDF ? 'Generating...' : 'Download Report'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
