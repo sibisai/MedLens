@@ -182,7 +182,7 @@ export default function App() {
               )}
 
               {result && !isAnalyzing && (
-                <AnalysisResults result={result} originalImage={previewUrl} />
+                <AnalysisResults result={result} originalImage={previewUrl} selectedModel={selectedModel} />
               )}
             </section>
           )}

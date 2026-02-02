@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Download, Info, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
-import { conditionDescriptions } from '../utils/sampleData';
+import { conditionDescriptions, modelInfo } from '../utils/sampleData';
+import { generateAnalysisReport } from '../utils/generatePDF';
 
 // Format class names for display (e.g., "notumor" -> "No Tumor", "glioma" -> "Glioma")
 function formatClassName(name) {
@@ -50,9 +51,10 @@ function formatConfidence(prob) {
   return percentage.toFixed(1);
 }
 
-export default function AnalysisResults({ result, originalImage }) {
+export default function AnalysisResults({ result, originalImage, selectedModel }) {
   const [heatmapOpacity, setHeatmapOpacity] = useState(50);
   const [showGradcamInfo, setShowGradcamInfo] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const canvasRef = useRef(null);
   const [originalImg, setOriginalImg] = useState(null);
   const [heatmapImg, setHeatmapImg] = useState(null);
@@ -105,13 +107,28 @@ export default function AnalysisResults({ result, originalImage }) {
 
   }, [originalImg, heatmapImg, heatmapOpacity]);
 
-  const handleDownload = () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = `gradcam_${prediction}_${Date.now()}.png`;
-      link.click();
+  const handleDownload = async () => {
+    if (isGeneratingPDF) return;
+
+    setIsGeneratingPDF(true);
+    try {
+      const model = modelInfo[selectedModel] || { name: 'Medical Image Analysis' };
+
+      await generateAnalysisReport({
+        prediction,
+        confidence,
+        probabilities,
+        conditionDescription,
+        modelName: model.name,
+        originalImageSrc: originalImage,
+        heatmapCanvas: canvasRef.current,
+        formatClassName,
+        formatConfidence,
+      });
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -187,10 +204,11 @@ export default function AnalysisResults({ result, originalImage }) {
 
                 <button
                   onClick={handleDownload}
-                  className="flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700"
+                  disabled={isGeneratingPDF}
+                  className="flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 disabled:opacity-50"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  Download
+                  {isGeneratingPDF ? 'Generating...' : 'Download Report'}
                 </button>
               </div>
 
