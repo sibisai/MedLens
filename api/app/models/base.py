@@ -35,18 +35,7 @@ class BaseClassifier(ABC):
     
     @abstractmethod
     def predict(self, image_bytes: bytes) -> Dict[str, Any]:
-        """
-        Run prediction on image.
-        
-        Args:
-            image_bytes: Raw image bytes
-            
-        Returns:
-            Dictionary containing:
-                - prediction: string label
-                - confidence: float [0, 1]
-                - probabilities: dict of class -> probability
-        """
+        """Run prediction on image."""
         pass
     
     @abstractmethod
@@ -56,17 +45,7 @@ class BaseClassifier(ABC):
         target_class: Optional[int] = None,
         output_type: str = "all"
     ) -> Dict[str, Any]:
-        """
-        Generate Grad-CAM visualization.
-        
-        Args:
-            image_bytes: Raw image bytes
-            target_class: Class index to visualize (None = predicted class)
-            output_type: "heatmap", "overlay", or "all"
-            
-        Returns:
-            Dictionary containing visualization images as base64 strings
-        """
+        """Generate Grad-CAM visualization."""
         pass
     
     def get_model_info(self) -> Dict[str, Any]:
@@ -77,3 +56,4 @@ class BaseClassifier(ABC):
             "num_classes": len(self.class_names),
             "device": str(self.device)
         }
+
