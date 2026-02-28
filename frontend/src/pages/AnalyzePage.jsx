@@ -21,9 +21,10 @@ export default function AnalyzePage() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const modelSelectorRef = useRef(null);
+  // Refs for scrolling
+  const step2Ref = useRef(null);
+  const step3Ref = useRef(null);
 
-  // Updated: destructure isExplaining and explanation
   const { analyze, reset, isAnalyzing, isExplaining, result, explanation, error } = useImageAnalysis();
 
   // Reset selection when model changes
@@ -37,7 +38,19 @@ export default function AnalyzePage() {
   // Handle model selection from Hero icons
   const handleHeroModelSelect = useCallback((modelId) => {
     setSelectedModel(modelId);
-    modelSelectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll to step 2
+    setTimeout(() => {
+      step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, []);
+
+  // Handle model selection from ModelSelector cards
+  const handleModelSelect = useCallback((modelId) => {
+    setSelectedModel(modelId);
+    // Scroll to step 2
+    setTimeout(() => {
+      step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }, []);
 
   // Handle sample image selection
@@ -46,6 +59,10 @@ export default function AnalyzePage() {
     setUploadedFile(null);
     setPreviewUrl(sample.path);
     reset();
+    // Scroll to step 3
+    setTimeout(() => {
+      step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }, [reset]);
 
   // Handle file upload
@@ -56,6 +73,11 @@ export default function AnalyzePage() {
 
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
+
+    // Scroll to step 3
+    setTimeout(() => {
+      step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 
     return () => URL.revokeObjectURL(url);
   }, [reset]);
@@ -127,7 +149,7 @@ export default function AnalyzePage() {
       <div className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Step 1: Model Selection */}
-          <section ref={modelSelectorRef} className="mb-10 scroll-mt-6">
+          <section className="mb-10">
             <div className="flex items-center gap-3 mb-4">
               <span className="flex items-center justify-center w-7 h-7 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
                 1
@@ -136,12 +158,12 @@ export default function AnalyzePage() {
             </div>
             <ModelSelector
               selectedModel={selectedModel}
-              onSelect={setSelectedModel}
+              onSelect={handleModelSelect}
             />
           </section>
 
           {/* Step 2: Image Selection */}
-          <section className="mb-10">
+          <section ref={step2Ref} className="mb-10 scroll-mt-6">
             <div className="flex items-center gap-3 mb-4">
               <span className="flex items-center justify-center w-7 h-7 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
                 2
@@ -174,49 +196,58 @@ export default function AnalyzePage() {
             </div>
           </section>
 
-          {/* Analyze Button */}
-          {hasSelection && !result && !isAnalyzing && (
-            <section className="mb-10">
-              <button
-                onClick={handleAnalyze}
-                disabled={isAnalyzing}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Analyze Image
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </section>
-          )}
-
-          {/* Step 3: Results */}
-          {(isAnalyzing || result || error) && (
-            <section>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="flex items-center justify-center w-7 h-7 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
-                  3
-                </span>
-                <h3 className="text-lg font-semibold text-gray-900">Results</h3>
+          {/* Step 3: Analyze Button / Results */}
+          <section ref={step3Ref} className="scroll-mt-6">
+            {/* Analyze Button */}
+            {hasSelection && !result && !isAnalyzing && (
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="flex items-center justify-center w-7 h-7 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
+                    3
+                  </span>
+                  <h3 className="text-lg font-semibold text-gray-900">Analyze</h3>
+                </div>
+                <button
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Analyze Image
+                  <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
+            )}
 
-              {isAnalyzing && (
-                <LoadingState imageUrl={previewUrl} />
-              )}
+            {/* Results */}
+            {(isAnalyzing || result || error) && (
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="flex items-center justify-center w-7 h-7 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full">
+                    3
+                  </span>
+                  <h3 className="text-lg font-semibold text-gray-900">Results</h3>
+                </div>
 
-              {error && !isAnalyzing && (
-                <ErrorMessage message={error} onRetry={handleAnalyze} />
-              )}
+                {isAnalyzing && (
+                  <LoadingState imageUrl={previewUrl} />
+                )}
 
-              {result && !isAnalyzing && (
-                <AnalysisResults
-                  result={result}
-                  originalImage={previewUrl}
-                  selectedModel={selectedModel}
-                  isExplaining={isExplaining}
-                  explanation={explanation}
-                />
-              )}
-            </section>
-          )}
+                {error && !isAnalyzing && (
+                  <ErrorMessage message={error} onRetry={handleAnalyze} />
+                )}
+
+                {result && !isAnalyzing && (
+                  <AnalysisResults
+                    result={result}
+                    originalImage={previewUrl}
+                    selectedModel={selectedModel}
+                    isExplaining={isExplaining}
+                    explanation={explanation}
+                  />
+                )}
+              </div>
+            )}
+          </section>
         </div>
       </div>
     </div>
