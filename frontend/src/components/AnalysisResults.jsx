@@ -51,7 +51,13 @@ function formatConfidence(prob) {
   return percentage.toFixed(1);
 }
 
-export default function AnalysisResults({ result, originalImage, selectedModel }) {
+export default function AnalysisResults({
+  result,
+  originalImage,
+  selectedModel,
+  isExplaining,
+  explanation
+}) {
   const [heatmapOpacity, setHeatmapOpacity] = useState(50);
   const [showGradcamInfo, setShowGradcamInfo] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -118,7 +124,7 @@ export default function AnalysisResults({ result, originalImage, selectedModel }
         prediction,
         confidence,
         probabilities,
-        conditionDescription,
+        conditionDescription: explanation || conditionDescription,
         modelName: model.name,
         originalImageSrc: originalImage,
         heatmapCanvas: canvasRef.current,
@@ -179,12 +185,23 @@ export default function AnalysisResults({ result, originalImage, selectedModel }
             </div>
           </div>
 
-          {/* Condition Description */}
-          {conditionDescription && (
-            <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-              {conditionDescription}
-            </p>
-          )}
+          {/* Condition Description / AI Explanation */}
+          <div className="mt-3">
+            {isExplaining ? (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                Generating explanation...
+              </div>
+            ) : explanation ? (
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {explanation}
+              </p>
+            ) : conditionDescription ? (
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {conditionDescription}
+              </p>
+            ) : null}
+          </div>
         </div>
 
         <div className="p-6">

@@ -1,104 +1,4 @@
-export const sampleImages = {
-  brain_tumor: [
-    { id: 'glioma_1', label: 'Glioma', path: '/samples/brain_tumor/glioma_1.jpg' },
-    { id: 'glioma_2', label: 'Glioma', path: '/samples/brain_tumor/glioma_2.jpg' },
-    { id: 'meningioma_1', label: 'Meningioma', path: '/samples/brain_tumor/meningioma_1.jpg' },
-    { id: 'meningioma_2', label: 'Meningioma', path: '/samples/brain_tumor/meningioma_2.jpg' },
-    { id: 'pituitary_1', label: 'Pituitary', path: '/samples/brain_tumor/pituitary_1.jpg' },
-    { id: 'pituitary_2', label: 'Pituitary', path: '/samples/brain_tumor/pituitary_2.jpg' },
-    { id: 'notumor_1', label: 'No Tumor', path: '/samples/brain_tumor/notumor_1.jpg' },
-    { id: 'notumor_2', label: 'No Tumor', path: '/samples/brain_tumor/notumor_2.jpg' },
-  ],
-  pneumonia: [
-    { id: 'normal_1', label: 'Normal', path: '/samples/pneumonia/normal_1.jpg' },
-    { id: 'normal_2', label: 'Normal', path: '/samples/pneumonia/normal_2.jpg' },
-    { id: 'pneumonia_1', label: 'Pneumonia', path: '/samples/pneumonia/pneumonia_1.jpg' },
-    { id: 'pneumonia_2', label: 'Pneumonia', path: '/samples/pneumonia/pneumonia_2.jpg' },
-  ],
-  retinal_oct: [
-    { id: 'cnv_1', label: 'CNV', path: '/samples/retinal_oct/cnv_1.jpg' },
-    { id: 'cnv_2', label: 'CNV', path: '/samples/retinal_oct/cnv_2.jpg' },
-    { id: 'dme_1', label: 'DME', path: '/samples/retinal_oct/dme_1.jpg' },
-    { id: 'dme_2', label: 'DME', path: '/samples/retinal_oct/dme_2.jpg' },
-    { id: 'drusen_1', label: 'Drusen', path: '/samples/retinal_oct/drusen_1.jpg' },
-    { id: 'drusen_2', label: 'Drusen', path: '/samples/retinal_oct/drusen_2.jpg' },
-    { id: 'normal_1', label: 'Normal', path: '/samples/retinal_oct/normal_1.jpg' },
-    { id: 'normal_2', label: 'Normal', path: '/samples/retinal_oct/normal_2.jpg' },
-  ],
-  bone_fracture: [
-    { id: 'fractured_1', label: 'Fractured', path: '/samples/bone_fracture/fractured_1.jpg' },
-    { id: 'fractured_2', label: 'Fractured', path: '/samples/bone_fracture/fractured_2.jpg' },
-    { id: 'fractured_3', label: 'Fractured', path: '/samples/bone_fracture/fractured_3.jpg' },
-    { id: 'fractured_4', label: 'Fractured', path: '/samples/bone_fracture/fractured_4.jpg' },
-    { id: 'normal_1', label: 'Not Fractured', path: '/samples/bone_fracture/normal_1.jpg' },
-    { id: 'normal_2', label: 'Not Fractured', path: '/samples/bone_fracture/normal_2.jpg' },
-    { id: 'normal_3', label: 'Not Fractured', path: '/samples/bone_fracture/normal_3.jpg' },
-    { id: 'normal_4', label: 'Not Fractured', path: '/samples/bone_fracture/normal_4.jpg' },
-  ],
-};
-
-export const modelInfo = {
-  brain_tumor: {
-    name: 'Brain Tumor Classification',
-    description: 'Classifies brain MRI scans into four categories: Glioma, Meningioma, Pituitary tumor, or No Tumor.',
-    accuracy: '99%',
-    classes: ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary'],
-    imageType: 'MRI Scan',
-  },
-  pneumonia: {
-    name: 'Pneumonia Detection',
-    description: 'Detects pneumonia from chest X-ray images with binary classification: Normal or Pneumonia.',
-    accuracy: '88%',
-    auc: '0.958',
-    classes: ['Normal', 'Pneumonia'],
-    imageType: 'Chest X-Ray',
-  },
-  retinal_oct: {
-    name: 'Retinal OCT Analysis',
-    description: 'Classifies retinal OCT scans into CNV, DME, Drusen, or Normal for eye disease detection.',
-    accuracy: '99%',
-    classes: ['CNV', 'DME', 'Drusen', 'Normal'],
-    imageType: 'OCT Scan',
-  },
-  bone_fracture: {
-    name: 'Bone Fracture Detection',
-    description: 'Detects bone fractures from X-ray images across all anatomical regions.',
-    accuracy: '98%',
-    auc: '0.998',
-    classes: ['Fractured', 'Not Fractured'],
-    imageType: 'X-Ray',
-  },
-};
-
-// Medical condition descriptions for results display
-// These provide user-friendly explanations of each condition
-// Keys use quotes consistently for readability
-export const conditionDescriptions = {
-  // Brain tumor conditions
-  'glioma': 'A brain tumor that starts in the brain\'s support cells and can affect how the brain functions.',
-  'meningioma': 'A slow-growing tumor that forms in the tissue covering the brain and spinal cord.',
-  'pituitary': 'A growth in the pituitary gland that can affect hormone levels in the body.',
-  'notumor': 'The scan does not show signs of a brain tumor.',
-
-  // Pneumonia conditions
-  'pneumonia': 'A lung infection where the air spaces fill with fluid or pus, making it harder to breathe.',
-
-  // Retinal OCT conditions
-  'cnv': 'Choroidal Neovascularization — Abnormal blood vessel growth under the retina that can leak and damage vision.',
-  'dme': 'Diabetic Macular Edema — Swelling in the center of the retina caused by diabetes-related fluid buildup.',
-  'drusen': 'Small yellowish deposits under the retina that are often linked to aging and macular degeneration.',
-
-  // Bone fracture conditions
-  'fractured': 'A bone that is cracked or broken.',
-  'not fractured': 'The bone appears intact with no visible breaks.',
-
-  // Shared "normal" - used by pneumonia, retinal OCT
-  'normal': 'The scan appears healthy with no signs of disease.',
-};
-
-// Pre-cached LLM explanations for Learn Mode (auto-generated)
-// Generated by: python scripts/generate_explanations.py
-export const cachedExplanations = {
+{
   "brain_tumor_glioma_1": "The image shows a left frontal lobe mass with irregular margins and surrounding edema, which is consistent with glioma presentation. The Grad-CAM highlighting concentrates on the left lateral ventricle region and adjacent white matter, corresponding to the tumor's location within the left frontal lobe where the AI model identified the pathological tissue.",
   "brain_tumor_glioma_2": "The original MRI shows a mass in the frontal lobe with associated mass effect and midline shift, which is characteristic of a glioma. The Grad-CAM highlighting shows intense red and yellow activation concentrated in the frontal and parietal lobes, with the strongest focus corresponding to the lateral cerebral hemispheres where the tumor burden is greatest.",
   "brain_tumor_meningioma_1": "There is a well-demarcated mass in the right frontal region that demonstrates homogeneous signal intensity consistent with meningioma. The Grad-CAM highlighting shows intense red and yellow activation concentrated in the right frontal lobe mass corresponding to the tumor location identified in the original MRI scan.",
@@ -115,7 +15,7 @@ export const cachedExplanations = {
   "retinal_oct_cnv_2": "The original OCT scan demonstrates a well-defined hyperreflective lesion at the level of the retinal pigment epithelium and Bruch's membrane in the subfoveal region with associated disruption of the normal retinal architecture. The Grad-CAM heatmap shows intense red and yellow highlighting concentrated at this same subfoveal lesion corresponding to the neovascular membrane complex and its associated exudative changes.",
   "retinal_oct_dme_1": "The original OCT scan demonstrates intraretinal fluid accumulation in the macula with disruption of the normal foveal contour, characteristic of diabetic macular edema. The Grad-CAM highlighting shows intense red and yellow activation concentrated at the foveal center and extending into the inner retinal layers where the fluid collection is most prominent.",
   "retinal_oct_dme_2": "The original scan demonstrates significant thickening and disruption of the central foveal contour with intraretinal fluid accumulation in the foveal pit, which is the hallmark structural finding of diabetic macular edema. The Grad-CAM highlighting with red and yellow coloration is concentrated in the central foveal region corresponding to the thickened neurosensory retina where the fluid accumulation and edema are located.",
-  "retinal_oct_drusen_1": "The original scan demonstrates multiple small yellowish depositions in the subretinal space beneath the retinal pigment epithelium in the macula, which are characteristic of drusen. The Grad-CAM highlighting concentrates in the red and yellow zones directly over the retinal pigment epithelium and subfoveal region, corresponding exactly to where the drusenoid deposits are located in the original grayscale image.",
+  "retinal_oct_drusen_1": "The original scan demonstrates multiple small yellowish depositions in the subretinal space beneath the retinal pigment epithelium in the macula, which are characteristic of drusen.\n\nThe Grad-CAM highlighting concentrates in the red and yellow zones directly over the retinal pigment epithelium and subfoveal region, corresponding exactly to where the drusenoid deposits are located in the original grayscale image.",
   "retinal_oct_drusen_2": "The hyper-reflective deposits visible at the level of the retinal pigment epithelium and Bruch's membrane in the subfoveal region represent drusen consistent with age-related macular degeneration. The Grad-CAM highlighting in red and yellow is concentrated at the inner retinal layers directly overlying the drusen deposits, indicating the AI model focused on the structural changes at the RPE-Bruch's membrane complex.",
   "retinal_oct_normal_1": "The foveal pit is preserved with normal contour and the retinal pigment epithelium layer demonstrates regular architecture without elevation or disruption in the central macula. The Grad-CAM highlighting concentrates in red and yellow tones directly over the foveal pit and inner retinal layers, indicating the model focused on the normal foveal depression and surrounding retinal anatomy as key diagnostic features.",
   "retinal_oct_normal_2": "The retinal layers demonstrate normal foveal anatomy with preserved photoreceptor ellipsoid zone and intact retinal pigment epithelium at the foveola. The Grad-CAM highlighting concentrates on the foveal pit region in the center of the macula, corresponding to the normal foveal depression and inner retinal morphology that characterizes healthy central vision.",
@@ -126,5 +26,5 @@ export const cachedExplanations = {
   "bone_fracture_normal_1": "The distal tibia and fibula demonstrate intact cortical margins with continuous bone density throughout the metaphyseal and diaphyseal regions without any linear lucencies or step-offs. The Grad-CAM highlighting concentrates intensely on the distal tibial plafond and medial malleolus, which represents the primary region of diagnostic focus for the fracture classification algorithm.",
   "bone_fracture_normal_2": "The calcaneus demonstrates intact cortical margins with continuous trabecular architecture throughout the body and tuberosity, supporting the non-fractured classification. The Grad-CAM highlighting concentrates on the plantar aspect and central body of the calcaneus, corresponding to the weight-bearing region where fractures most commonly occur.",
   "bone_fracture_normal_3": "The cortical continuity of the distal tibia and fibula is maintained throughout the visualized bone length with no disruption in the bone density or alignment visible on the original radiograph. The Grad-CAM highlighting concentrates in the distal tibiofibular region where the AI model focused its analysis to confirm the absence of fracture lines in this anatomically complex area.",
-  "bone_fracture_normal_4": "The distal radius and ulna demonstrate intact cortical outlines with continuous bone density throughout the metaphyseal and diaphyseal regions, with no visible lucency or disruption indicating fracture. The Grad-CAM highlighting is concentrated over the distal carpal bones and the radiocarpal joint space, corresponding to the area of maximum density change and anatomical complexity at the wrist articulation.",
-};
+  "bone_fracture_normal_4": "The distal radius and ulna demonstrate intact cortical outlines with continuous bone density throughout the metaphyseal and diaphyseal regions, with no visible lucency or disruption indicating fracture. The Grad-CAM highlighting is concentrated over the distal carpal bones and the radiocarpal joint space, corresponding to the area of maximum density change and anatomical complexity at the wrist articulation."
+}

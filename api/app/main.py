@@ -11,7 +11,11 @@ from typing import Optional, Dict, Any
 import base64
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from app.models import BrainTumorClassifier, PneumoniaClassifier, BoneFractureClassifier, RetinalOCTClassifier
+from app.utils.llm import generate_explanation, get_fallback_explanation
 
 # ============================================================================
 # Model Registry - Add new models here
@@ -91,6 +95,12 @@ async def lifespan(app: FastAPI):
     print("Loading models...")
     load_models()
     print(f"Loaded {len(MODELS)} model(s): {list(MODELS.keys())}")
+    
+    # Check LLM availability
+    if os.getenv("ANTHROPIC_API_KEY"):
+        print("✓ Anthropic API key configured")
+    else:
+        print("⚠ Anthropic API key not set - explanations will use fallback")
     print("=" * 50)
     yield
     # Shutdown: Cleanup if needed
@@ -108,13 +118,17 @@ app = FastAPI(
     
     ## Available Models
     - **brain_tumor**: MRI brain tumor classification (glioma, meningioma, pituitary, notumor)
+    - **pneumonia**: Chest X-ray pneumonia detection
+    - **bone_fracture**: X-ray bone fracture detection
+    - **retinal_oct**: Retinal OCT scan classification
     
     ## Features
     - Image classification with confidence scores
     - Grad-CAM visualization for model interpretability
+    - AI-generated plain-English explanations (vision-enabled)
     - Support for multiple model types
     """,
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan
 )
 
@@ -138,7 +152,7 @@ async def root():
     return {
         "status": "healthy",
         "service": "Medical Image Analysis API",
-        "version": "1.0.0"
+        "version": "2.0.0"
     }
 
 
@@ -148,7 +162,8 @@ async def health_check():
     return {
         "status": "healthy",
         "models_loaded": len(MODELS),
-        "available_models": list(MODELS.keys())
+        "available_models": list(MODELS.keys()),
+        "llm_enabled": bool(os.getenv("ANTHROPIC_API_KEY"))
     }
 
 
@@ -224,12 +239,17 @@ async def predict_with_gradcam(
     target_class: Optional[int] = Query(
         default=None,
         description="Class index to visualize. If not provided, uses predicted class."
+    ),
+    include_explanation: bool = Query(
+        default=False,
+        description="Whether to include AI-generated explanation (adds latency)"
     )
 ):
     """
     Run classification with Grad-CAM visualization.
     
-    Returns prediction with confidence scores and base64-encoded visualization images.
+    Returns prediction with confidence scores, base64-encoded visualization images.
+    Set include_explanation=true to also get AI explanation (slower).
     
     **Output types:**
     - `heatmap`: Just the Grad-CAM heatmap
@@ -268,10 +288,93 @@ async def predict_with_gradcam(
             output_type=output_type
         )
         
+        # Generate explanation if requested (adds latency)
+        if include_explanation:
+            comparison_b64 = result["images"].get("comparison")
+            original_b64 = result["images"].get("original")
+            overlay_b64 = result["images"].get("overlay")
+            
+            explanation = generate_explanation(
+                model_name=model_name,
+                prediction=result["prediction"],
+                confidence=result["confidence"],
+                probabilities=result["probabilities"],
+                original_image_b64=original_b64,
+                overlay_image_b64=overlay_b64,
+                comparison_image_b64=comparison_b64,
+            )
+            
+            # Use fallback if LLM fails
+            if explanation is None:
+                explanation = get_fallback_explanation(
+                    model_name=model_name,
+                    prediction=result["prediction"],
+                    confidence=result["confidence"]
+                )
+            
+            result["explanation"] = explanation
+        
         return result
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+
+
+@app.post("/explain/{model_name}", tags=["Explanation"])
+async def explain_prediction(
+    model_name: str,
+    prediction: str = Query(..., description="The predicted class"),
+    confidence: float = Query(..., description="Confidence score (0-1)"),
+    file: UploadFile = File(..., description="Comparison image (original + overlay side-by-side)"),
+):
+    """
+    Generate an AI explanation for a prediction.
+    
+    Call this after /predict/{model_name}/gradcam to get a detailed
+    explanation while showing results immediately to the user.
+    
+    Send the comparison image (side-by-side original and overlay) for best results.
+    """
+    # Validate model
+    if model_name not in MODELS:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Model '{model_name}' not found. Available: {list(MODELS.keys())}"
+        )
+    
+    # Validate file type
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=400,
+            detail="File must be an image"
+        )
+    
+    try:
+        # Read image bytes and convert to base64
+        image_bytes = await file.read()
+        image_b64 = base64.b64encode(image_bytes).decode('utf-8')
+        
+        # Generate explanation
+        explanation = generate_explanation(
+            model_name=model_name,
+            prediction=prediction,
+            confidence=confidence,
+            probabilities={},  # Not needed for explanation
+            comparison_image_b64=image_b64,
+        )
+        
+        # Use fallback if LLM fails
+        if explanation is None:
+            explanation = get_fallback_explanation(
+                model_name=model_name,
+                prediction=prediction,
+                confidence=confidence
+            )
+        
+        return {"explanation": explanation}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Explanation failed: {str(e)}")
 
 
 @app.post("/predict/{model_name}/gradcam/image", tags=["Prediction"])
