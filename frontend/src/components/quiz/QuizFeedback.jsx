@@ -2,28 +2,11 @@ import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, ArrowRight, Sparkles } from 'lucide-react';
 import clsx from 'clsx';
 import confetti from 'canvas-confetti';
-
-function formatClassName(name) {
-  const formatMap = {
-    'notumor': 'No Tumor',
-    'glioma': 'Glioma',
-    'meningioma': 'Meningioma',
-    'pituitary': 'Pituitary',
-    'normal': 'Normal',
-    'pneumonia': 'Pneumonia',
-    'cnv': 'CNV',
-    'dme': 'DME',
-    'drusen': 'Drusen',
-    'fractured': 'Fractured',
-    'not fractured': 'Not Fractured',
-  };
-  return formatMap[name.toLowerCase()] || name;
-}
+import formatClassName from '../../utils/formatClassName';
 
 export default function QuizFeedback({ question, userAnswer, isCorrect, explanation, onNext }) {
   const [showExplanation, setShowExplanation] = useState(false);
 
-  // Pre-cached overlay path
   const overlayPath = `/samples/overlays/${question.model}_${question.id}.png`;
 
   useEffect(() => {
@@ -42,36 +25,33 @@ export default function QuizFeedback({ question, userAnswer, isCorrect, explanat
   }, [isCorrect]);
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Result Banner */}
+    <div className="max-w-2xl mx-auto animate-fade-in">
       <div className={clsx(
-        'flex items-center gap-3 p-4 rounded-xl mb-6',
-        isCorrect ? 'bg-success-50' : 'bg-red-50'
+        'flex items-center gap-3 p-4 rounded-xl mb-6 shadow-card',
+        isCorrect ? 'bg-success-50 border border-success-100' : 'bg-error-50 border border-error-100'
       )}>
         {isCorrect ? (
           <CheckCircle className="w-6 h-6 text-success-500 shrink-0" />
         ) : (
-          <XCircle className="w-6 h-6 text-red-500 shrink-0" />
+          <XCircle className="w-6 h-6 text-error-500 shrink-0" />
         )}
         <div>
           <p className={clsx(
-            'font-semibold',
-            isCorrect ? 'text-success-700' : 'text-red-700'
+            'font-semibold font-display',
+            isCorrect ? 'text-success-700' : 'text-error-700'
           )}>
             {isCorrect ? 'Correct!' : 'Incorrect'}
           </p>
           {!isCorrect && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-error-500">
               The correct answer is <span className="font-medium">{formatClassName(question.label)}</span>
             </p>
           )}
         </div>
       </div>
 
-      {/* Images - Original and Grad-CAM side by side */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-card overflow-hidden mb-6">
         <div className="grid grid-cols-2 gap-px bg-gray-200">
-          {/* Original */}
           <div className="bg-gray-900">
             <p className="text-xs font-medium text-gray-400 text-center py-2 bg-gray-800">Original</p>
             <div className="aspect-square flex items-center justify-center">
@@ -83,7 +63,6 @@ export default function QuizFeedback({ question, userAnswer, isCorrect, explanat
             </div>
           </div>
 
-          {/* Grad-CAM Overlay - Now from pre-cached file */}
           <div className="bg-gray-900">
             <p className="text-xs font-medium text-gray-400 text-center py-2 bg-gray-800">Grad-CAM</p>
             <div className="aspect-square flex items-center justify-center">
@@ -96,7 +75,6 @@ export default function QuizFeedback({ question, userAnswer, isCorrect, explanat
           </div>
         </div>
 
-        {/* Label */}
         <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
           <span className="text-sm font-medium text-white">
             {formatClassName(question.label)}
@@ -109,14 +87,13 @@ export default function QuizFeedback({ question, userAnswer, isCorrect, explanat
         </div>
       </div>
 
-      {/* Explanation */}
       {showExplanation && explanation && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 mb-6">
+        <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6">
           <div className="flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-primary-600 mt-0.5 shrink-0" />
+            <Sparkles className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
             <div>
-              <h3 className="text-sm font-semibold text-primary-900 mb-1">Explanation</h3>
-              <p className="text-sm text-primary-800 leading-relaxed">
+              <h3 className="text-sm font-semibold text-amber-900 mb-1">Explanation</h3>
+              <p className="text-sm text-amber-800 leading-relaxed">
                 {explanation}
               </p>
             </div>
@@ -124,10 +101,9 @@ export default function QuizFeedback({ question, userAnswer, isCorrect, explanat
         </div>
       )}
 
-      {/* Next Button */}
       <button
         onClick={onNext}
-        className="w-full flex items-center justify-center gap-2 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-xl transition-all duration-200"
       >
         Next Question
         <ArrowRight className="w-5 h-5" />

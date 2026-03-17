@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply antialiased text-gray-900 bg-gray-25;
+  @apply antialiased text-gray-900 bg-gray-50;
 }
 
 /* Line clamp utility */
@@ -32,14 +32,68 @@ body {
   @apply bg-gray-400;
 }
 
-/* Smooth transitions */
-* {
-  @apply transition-colors duration-150;
-}
-
 /* Focus styles */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
   @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+}
+
+/* Gradient text utility */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-900 via-primary-600 to-primary-500;
+}
+
+/* Subtle grid background for hero sections */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Glass effect */
+.glass {
+  @apply bg-white/80 backdrop-blur-lg;
+}
+
+/* Brand gradient (deep blue to medium blue) */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #175CD3, #2E90FA);
+}
+
+.bg-brand-gradient-light {
+  background: linear-gradient(135deg, rgba(23,92,211,0.1), rgba(46,144,250,0.1));
+}
+
+/* Slider styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1570EF;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1570EF;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }

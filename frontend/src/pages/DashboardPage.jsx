@@ -23,15 +23,11 @@ export default function DashboardPage() {
     setStats(calculateStats());
   }, []);
 
-  const refreshStats = () => {
-    setStats(calculateStats());
-  };
-
   const handleReset = () => {
     if (confirm('Reset all progress and load demo data?')) {
       resetToDemo();
       setIsDemo(true);
-      refreshStats();
+      setStats(calculateStats());
     }
   };
 
@@ -56,22 +52,22 @@ export default function DashboardPage() {
   return (
     <div className="flex-1 bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="glass border-b border-gray-200/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-primary-100 rounded-xl">
-                <BarChart3 className="w-5 h-5 text-primary-600" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-gradient">
+                <BarChart3 className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+                <h1 className="text-xl font-bold font-display text-gray-900">Dashboard</h1>
                 <p className="text-sm text-gray-500">Track your learning progress</p>
               </div>
             </div>
 
             <Link
               to="/learn"
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white text-sm font-medium rounded-lg transition-all duration-200"
             >
               <GraduationCap className="w-4 h-4" />
               Practice
@@ -83,61 +79,38 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Demo Banner */}
         {isDemo && (
-          <div className="flex items-center gap-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg mb-6">
-            <Info className="w-5 h-5 text-blue-500 shrink-0" />
-            <p className="text-sm text-blue-800 flex-1">
+          <div className="flex items-center gap-3 px-4 py-3 bg-primary-50 border border-primary-200 rounded-lg mb-6">
+            <Info className="w-5 h-5 text-primary-500 shrink-0" />
+            <p className="text-sm text-primary-800 flex-1">
               Showing sample data for demonstration. Complete quizzes in Learn Mode to see your real progress.
             </p>
           </div>
         )}
 
-        {/* Stats Overview - Consistent styling */}
+        {/* Stats Overview */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex items-center justify-center w-9 h-9 bg-primary-100 rounded-lg">
-                <Target className="w-5 h-5 text-primary-600" />
+          {[
+            { icon: Target, label: 'Accuracy', value: `${stats.accuracy}%` },
+            { icon: CheckCircle, label: 'Correct', value: stats.totalCorrect },
+            { icon: HelpCircle, label: 'Answered', value: stats.totalAnswered },
+            { icon: Layers, label: 'Sessions', value: stats.sessionsCompleted },
+          ].map(({ icon: Icon, label, value }) => (
+            <div key={label} className="bg-white rounded-xl border border-gray-200 shadow-card p-5 hover:shadow-card-hover transition-shadow duration-200">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-gradient-light">
+                  <Icon className="w-5 h-5 text-primary-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-600">{label}</span>
               </div>
-              <span className="text-sm font-medium text-gray-600">Accuracy</span>
+              <p className="text-3xl font-bold font-display text-gray-900">{value}</p>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.accuracy}%</p>
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex items-center justify-center w-9 h-9 bg-primary-100 rounded-lg">
-                <CheckCircle className="w-5 h-5 text-primary-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Correct</span>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.totalCorrect}</p>
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex items-center justify-center w-9 h-9 bg-primary-100 rounded-lg">
-                <HelpCircle className="w-5 h-5 text-primary-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Answered</span>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.totalAnswered}</p>
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex items-center justify-center w-9 h-9 bg-primary-100 rounded-lg">
-                <Layers className="w-5 h-5 text-primary-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Sessions</span>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.sessionsCompleted}</p>
-          </div>
+          ))}
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
           {/* Accuracy by Model Chart */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-sm font-semibold text-gray-900 mb-4">Accuracy by Model</h2>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-card p-6">
+            <h2 className="text-sm font-semibold font-display text-gray-900 mb-4">Accuracy by Model</h2>
             {modelChartData.length > 0 ? (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -147,7 +120,7 @@ export default function DashboardPage() {
                     <YAxis type="category" dataKey="name" width={90} tick={{ fontSize: 12 }} />
                     <Tooltip
                       formatter={(value) => [`${value}%`, 'Accuracy']}
-                      contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb' }}
+                      contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0' }}
                     />
                     <Bar dataKey="accuracy" radius={[0, 4, 4, 0]}>
                       {modelChartData.map((entry, index) => (
@@ -165,14 +138,14 @@ export default function DashboardPage() {
           </div>
 
           {/* Weak Areas */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-sm font-semibold text-gray-900 mb-4">Areas to Improve</h2>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-card p-6">
+            <h2 className="text-sm font-semibold font-display text-gray-900 mb-4">Areas to Improve</h2>
             {stats.weakAreas.length > 0 ? (
               <div className="space-y-3">
                 {stats.weakAreas.map((area) => (
                   <div
                     key={`${area.model}_${area.label}`}
-                    className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-100 rounded-lg"
+                    className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-100 rounded-lg hover:shadow-card transition-shadow duration-200"
                   >
                     <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg">
                       <AlertTriangle className="w-4 h-4 text-amber-600" />
@@ -201,8 +174,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Sessions */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
-          <h2 className="text-sm font-semibold text-gray-900 mb-4">Recent Sessions</h2>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-card p-6 mb-8">
+          <h2 className="text-sm font-semibold font-display text-gray-900 mb-4">Recent Sessions</h2>
           {stats.recentSessions.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -216,7 +189,7 @@ export default function DashboardPage() {
                 </thead>
                 <tbody>
                   {stats.recentSessions.map((session, index) => (
-                    <tr key={index} className="border-b border-gray-50 last:border-0">
+                    <tr key={index} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors duration-150">
                       <td className="py-3 text-sm text-gray-900">
                         {new Date(session.date).toLocaleString('en-US', {
                           month: 'short',
@@ -233,7 +206,7 @@ export default function DashboardPage() {
                           ? 'bg-success-100 text-success-700'
                           : session.accuracy >= 60
                             ? 'bg-amber-100 text-amber-700'
-                            : 'bg-red-100 text-red-700'
+                            : 'bg-error-100 text-error-700'
                           }`}>
                           {session.accuracy}%
                         </span>
@@ -254,7 +227,7 @@ export default function DashboardPage() {
         <div className="flex justify-center">
           <button
             onClick={handleReset}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-150"
           >
             <RotateCcw className="w-4 h-4" />
             Reset to Demo Data

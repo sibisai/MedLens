@@ -12,7 +12,6 @@ export default function QuizSummary({ answers, onRestart }) {
     return { correct, total, percentage };
   }, [answers]);
 
-  // Confetti only (save is handled in LearnPage)
   useEffect(() => {
     if (stats.percentage >= 80) {
       confetti({
@@ -35,13 +34,12 @@ export default function QuizSummary({ answers, onRestart }) {
   const message = getMessage();
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Header */}
+    <div className="max-w-2xl mx-auto animate-fade-in">
       <div className="text-center mb-8">
-        <div className="flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mx-auto mb-4">
-          <Trophy className="w-8 h-8 text-primary-600" />
+        <div className="flex items-center justify-center w-16 h-16 rounded-2xl mx-auto mb-4 bg-brand-gradient">
+          <Trophy className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold font-display text-gray-900 mb-2">
           Session Complete!
         </h1>
         <p className="text-lg text-gray-600">
@@ -49,22 +47,20 @@ export default function QuizSummary({ answers, onRestart }) {
         </p>
       </div>
 
-      {/* Score Card */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-card p-6 mb-6">
         <div className="flex items-center justify-center gap-8">
           <div className="text-center">
-            <div className="text-4xl font-bold text-primary-600">{stats.percentage}%</div>
-            <div className="text-sm text-gray-500">Accuracy</div>
+            <div className="text-4xl font-bold font-display text-amber-500">{stats.percentage}%</div>
+            <div className="text-sm text-gray-500 mt-1">Accuracy</div>
           </div>
           <div className="w-px h-12 bg-gray-200" />
           <div className="text-center">
-            <div className="text-4xl font-bold text-gray-900">{stats.correct}/{stats.total}</div>
-            <div className="text-sm text-gray-500">Correct</div>
+            <div className="text-4xl font-bold font-display text-gray-900">{stats.correct}/{stats.total}</div>
+            <div className="text-sm text-gray-500 mt-1">Correct</div>
           </div>
         </div>
       </div>
 
-      {/* Perfect Score Message */}
       {stats.percentage === 100 && (
         <div className="bg-success-50 border border-success-100 rounded-xl p-6 mb-6 text-center">
           <CheckCircle className="w-8 h-8 text-success-500 mx-auto mb-2" />
@@ -72,18 +68,17 @@ export default function QuizSummary({ answers, onRestart }) {
         </div>
       )}
 
-      {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-4">
         <button
           onClick={onRestart}
-          className="flex items-center justify-center gap-2 py-4 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center gap-2 py-4 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 shadow-card transition-all duration-200"
         >
           <RotateCcw className="w-5 h-5" />
           New Session
         </button>
         <Link
           to="/dashboard"
-          className="flex items-center justify-center gap-2 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors"
+          className="flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-xl transition-all duration-200"
         >
           <BarChart3 className="w-5 h-5" />
           Dashboard

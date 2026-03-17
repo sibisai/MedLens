@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import QuizSetup from '../components/quiz/QuizSetup';
 import QuizCard from '../components/quiz/QuizCard';
 import QuizFeedback from '../components/quiz/QuizFeedback';
@@ -22,27 +22,21 @@ function shuffleArray(array) {
 }
 
 function getAllQuestions(modelFilter) {
-  let allSamples = [];
-
   const models = modelFilter === 'all'
     ? Object.keys(sampleImages)
     : [modelFilter];
 
-  models.forEach(model => {
-    const samples = sampleImages[model] || [];
-    samples.forEach(sample => {
-      allSamples.push({
-        ...sample,
-        model,
-        modelInfo: modelInfo[model],
-      });
-    });
-  });
+  const allSamples = models.flatMap(model =>
+    (sampleImages[model] || []).map(sample => ({
+      ...sample,
+      model,
+      modelInfo: modelInfo[model],
+    }))
+  );
 
   return shuffleArray(allSamples);
 }
 
-// Save results to localStorage
 function saveSession(answers) {
   const existing = JSON.parse(localStorage.getItem('medlens_quiz_history') || '[]');
   const session = {
@@ -61,7 +55,6 @@ function saveSession(answers) {
 
 export default function LearnPage() {
   const [quizState, setQuizState] = useState(STATES.SETUP);
-  const [selectedModel, setSelectedModel] = useState('all');
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
@@ -72,7 +65,6 @@ export default function LearnPage() {
 
   const handleStart = useCallback((model) => {
     const quizQuestions = getAllQuestions(model);
-    setSelectedModel(model);
     setQuestions(quizQuestions);
     setCurrentIndex(0);
     setAnswers([]);
@@ -113,7 +105,6 @@ export default function LearnPage() {
     setQuizState(STATES.ACTIVE);
   }, [currentIndex, questions]);
 
-  // End session and save results HERE (only runs once)
   const handleEndSession = useCallback(() => {
     if (answers.length > 0) {
       saveSession(answers);
@@ -142,7 +133,7 @@ export default function LearnPage() {
     <div className="flex-1 bg-gray-50">
       {/* Sub-header - Only during active quiz */}
       {showQuizHeader && (
-        <div className="bg-white border-b border-gray-200">
+        <div className="glass border-b border-gray-200/60 sticky top-14 sm:top-16 z-40">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-12">
               <div className="text-sm text-gray-600">
@@ -151,7 +142,7 @@ export default function LearnPage() {
 
               <button
                 onClick={handleEndSession}
-                className="text-sm font-medium text-primary-600 hover:text-primary-700"
+                className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors duration-150"
               >
                 End Session
               </button>
@@ -161,7 +152,7 @@ export default function LearnPage() {
           {/* Progress Bar */}
           <div className="h-1 bg-gray-100">
             <div
-              className="h-full bg-primary-500 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-primary-400 to-primary-600 transition-all duration-300"
               style={{ width: `${((currentIndex + (quizState === STATES.FEEDBACK ? 1 : 0)) / questions.length) * 100}%` }}
             />
           </div>

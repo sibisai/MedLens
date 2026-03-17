@@ -22,13 +22,14 @@ export default function HomePage() {
   return (
     <div className="flex-1">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-primary-50 to-white py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+      <section className="relative bg-gradient-to-b from-primary-50 to-gray-50 py-20 sm:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-60" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display text-gradient mb-5">
             MedLens
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-3">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-4">
             Medical AI you can see and understand.
           </p>
 
@@ -39,21 +40,21 @@ export default function HomePage() {
       </section>
 
       {/* Feature Cards */}
-      <section className="py-12 sm:py-16">
+      <section className="py-16 sm:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-6 items-stretch">
             {features.map(({ path, icon: Icon, title, description, cta }) => (
               <Link
                 key={path}
                 to={path}
-                className="group bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-primary-200 transition-all duration-200 h-full"
+                className="group bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-card hover:shadow-card-hover hover:border-primary-200 hover:-translate-y-1 transition-all duration-200 h-full"
               >
                 <div className="flex items-start gap-4 h-full">
-                  <div className="flex items-center justify-center w-12 h-12 bg-primary-50 rounded-xl group-hover:bg-primary-100 transition-colors shrink-0">
-                    <Icon className="w-6 h-6 text-primary-600" />
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 transition-transform duration-200 group-hover:scale-105 bg-brand-gradient">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1 flex flex-col h-full">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h2 className="text-xl font-semibold font-display text-gray-900 mb-2">
                       {title}
                     </h2>
                     <p className="text-gray-600 leading-relaxed flex-1">
@@ -72,7 +73,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 border-t border-gray-100">
+      <section className="py-14 border-t border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             {[
@@ -82,8 +83,8 @@ export default function HomePage() {
               { value: '<2s', label: 'Inference Time' },
             ].map(({ value, label }) => (
               <div key={label}>
-                <div className="text-2xl sm:text-3xl font-bold text-primary-600">{value}</div>
-                <div className="text-sm text-gray-500">{label}</div>
+                <div className="text-2xl sm:text-3xl font-bold font-display text-amber-500">{value}</div>
+                <div className="text-sm text-gray-500 mt-1">{label}</div>
               </div>
             ))}
           </div>
