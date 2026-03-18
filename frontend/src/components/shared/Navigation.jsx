@@ -32,6 +32,7 @@ export default function Navigation() {
                 <Link
                   key={path}
                   to={path}
+                  aria-label={label}
                   className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${isActive
                     ? 'bg-primary-50/80 text-primary-700 border border-primary-100'
                     : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'

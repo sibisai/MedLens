@@ -207,7 +207,7 @@ export default function AnalysisResults({
                   <label className="text-xs font-medium text-gray-600">
                     Heatmap Intensity
                   </label>
-                  <span className="text-xs font-semibold text-amber-600">
+                  <span className="text-xs font-semibold text-primary-600">
                     {heatmapOpacity}%
                   </span>
                 </div>
@@ -217,6 +217,7 @@ export default function AnalysisResults({
                   max="100"
                   value={heatmapOpacity}
                   onChange={(e) => setHeatmapOpacity(Number(e.target.value))}
+                  aria-label="Heatmap overlay intensity"
                   className="slider"
                 />
               </div>
@@ -236,18 +237,18 @@ export default function AnalysisResults({
                       <div className="flex items-center justify-between mb-1.5">
                         <span className={clsx(
                           'text-sm font-medium',
-                          isPredicted ? 'text-amber-700' : 'text-gray-700'
+                          isPredicted ? 'text-primary-700' : 'text-gray-700'
                         )}>
                           {displayName}
                           {isPredicted && (
-                            <span className="ml-2 text-xs font-normal text-amber-500">
+                            <span className="ml-2 text-xs font-normal text-primary-500">
                               (Predicted)
                             </span>
                           )}
                         </span>
                         <span className={clsx(
                           'text-sm font-semibold',
-                          isPredicted ? 'text-amber-700' : 'text-gray-600'
+                          isPredicted ? 'text-primary-700' : 'text-gray-600'
                         )}>
                           {percentage}%
                         </span>
@@ -257,7 +258,7 @@ export default function AnalysisResults({
                         <div
                           className={clsx(
                             'h-full rounded-full transition-all duration-500 ease-out',
-                            isPredicted ? 'bg-amber-500' : 'bg-gray-300'
+                            isPredicted ? 'bg-primary-500' : 'bg-gray-300'
                           )}
                           style={{ width: `${percentage}%` }}
                         />

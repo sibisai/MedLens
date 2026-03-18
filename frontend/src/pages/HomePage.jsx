@@ -83,7 +83,7 @@ export default function HomePage() {
               { value: '<2s', label: 'Inference Time' },
             ].map(({ value, label }) => (
               <div key={label}>
-                <div className="text-2xl sm:text-3xl font-bold font-display text-amber-500">{value}</div>
+                <div className="text-2xl sm:text-3xl font-bold font-display text-primary-600">{value}</div>
                 <div className="text-sm text-gray-500 mt-1">{label}</div>
               </div>
             ))}

@@ -18,7 +18,7 @@ const modelIcons = [
 function StepBadge({ number, connector = false }) {
   return (
     <div className="relative flex flex-col items-center">
-      <span className="flex items-center justify-center w-8 h-8 bg-amber-50 text-amber-700 text-sm font-bold rounded-full border-2 border-amber-200">
+      <span className="flex items-center justify-center w-8 h-8 bg-primary-50 text-primary-700 text-sm font-bold rounded-full border-2 border-primary-200">
         {number}
       </span>
       {connector && <div className="w-0.5 h-8 bg-gray-200 mt-2 hidden sm:block" />}

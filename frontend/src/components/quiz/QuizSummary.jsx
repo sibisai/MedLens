@@ -19,6 +19,7 @@ export default function QuizSummary({ answers, onRestart }) {
         spread: 60,
         origin: { y: 0.6 },
         colors: ['#1570EF', '#2E90FA', '#53B1FD', '#84CAFF'],
+        disableForReducedMotion: true,
       });
     }
   }, [stats.percentage]);
@@ -50,7 +51,7 @@ export default function QuizSummary({ answers, onRestart }) {
       <div className="bg-white rounded-xl border border-gray-200 shadow-card p-6 mb-6">
         <div className="flex items-center justify-center gap-8">
           <div className="text-center">
-            <div className="text-4xl font-bold font-display text-amber-500">{stats.percentage}%</div>
+            <div className="text-4xl font-bold font-display text-primary-600">{stats.percentage}%</div>
             <div className="text-sm text-gray-500 mt-1">Accuracy</div>
           </div>
           <div className="w-px h-12 bg-gray-200" />
