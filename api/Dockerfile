@@ -34,7 +34,8 @@ RUN pip install --no-cache-dir \
     Pillow==10.2.0 \
     opencv-python-headless==4.9.0.80 \
     numpy==1.26.4 \
-    python-dotenv==1.0.1
+    python-dotenv==1.0.1 \
+    anthropic
 
 # Copy application code
 COPY app/ ./app/
