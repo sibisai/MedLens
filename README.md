@@ -4,7 +4,7 @@ A medical image analysis and education platform with deep learning models, Grad-
 
 ## Demo
 
-🔗 **Live Demo**: [medical-image-classifier-two.vercel.app](https://medical-image-classifier-two.vercel.app)
+🔗 **Live Demo**: [medlens-two.vercel.app](medlens-two.vercel.app)
 
 ## Overview
 
